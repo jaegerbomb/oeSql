@@ -1,0 +1,11 @@
+*.exe
+Makefile*
+*.autosave
+*.pro.user
+moc_*
+radarProtoUi
+debug/
+release/
+*.pdb
+tmp/
+*.sqlite
