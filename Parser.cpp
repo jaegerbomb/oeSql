@@ -434,7 +434,7 @@ void Parser::buildClassTable(QFile &file, const bool baseclassPass)
 //      for (int i = 0; i < namespaces.size(); i++) {
 //         std::cout << "NAMESPACES = " << namespaces[i].toStdString() << std::endl;
 //      }
-      std::cout << std::endl << std::endl;
+//      std::cout << std::endl << std::endl;
    }
    //else std::cout << "NO class definition in File = " << file.fileName().toStdString() << std::endl;
 
