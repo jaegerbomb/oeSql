@@ -2,10 +2,13 @@
 Makefile*
 *.autosave
 *.pro.user
+*.pdb
+*.sqlite
 moc_*
-radarProtoUi
+
+# Executable and directories
+oeSql
 debug/
 release/
-*.pdb
 tmp/
-*.sqlite
+
