@@ -53,11 +53,11 @@ ConnectionWidget::ConnectionWidget(QWidget *parent)
     tree->setHeaderLabels(QStringList(tr("database")));
     tree->header()->setSectionResizeMode(QHeaderView::Stretch);
     QAction *refreshAction = new QAction(tr("Refresh"), tree);
-    metaDataAction = new QAction(tr("Show Schema"), tree);
+//    metaDataAction = new QAction(tr("Show Schema"), tree);
     connect(refreshAction, SIGNAL(triggered()), SLOT(refresh()));
-    connect(metaDataAction, SIGNAL(triggered()), SLOT(showMetaData()));
+//    connect(metaDataAction, SIGNAL(triggered()), SLOT(showMetaData()));
     tree->addAction(refreshAction);
-    tree->addAction(metaDataAction);
+//    tree->addAction(metaDataAction);
     tree->setContextMenuPolicy(Qt::ActionsContextMenu);
 
     layout->addWidget(tree);
@@ -71,12 +71,16 @@ ConnectionWidget::~ConnectionWidget()
 
 static QString qDBCaption(const QSqlDatabase &db)
 {
-    QString nm = db.driverName();
-    nm.append(QLatin1Char(':'));
-    if (!db.userName().isEmpty())
-        nm.append(db.userName()).append(QLatin1Char('@'));
-    nm.append(db.databaseName());
-    return nm;
+//    QString nm = db.driverName();
+//    nm.append(QLatin1Char(':'));
+//    if (!db.userName().isEmpty())
+//        nm.append(db.userName()).append(QLatin1Char('@'));
+//    nm.append(db.databaseName());
+   QString temp = db.databaseName();
+   // we only want the file name!
+   int sIdx = temp.lastIndexOf("/") + 1;
+   temp = temp.right(temp.length() - sIdx);
+   return temp;
 }
 
 void ConnectionWidget::refresh()
@@ -86,27 +90,28 @@ void ConnectionWidget::refresh()
 
     bool gotActiveDb = false;
     for (int i = 0; i < connectionNames.count(); ++i) {
-        QTreeWidgetItem *root = new QTreeWidgetItem(tree);
-        QSqlDatabase db = QSqlDatabase::database(connectionNames.at(i), false);
-        root->setText(0, qDBCaption(db));
-        if (connectionNames.at(i) == activeDb) {
-            gotActiveDb = true;
-            setActive(root);
-        }
-        if (db.isOpen()) {
-            QStringList tables = db.tables();
-            for (int t = 0; t < tables.count(); ++t) {
-                QTreeWidgetItem *table = new QTreeWidgetItem(root);
-                table->setText(0, tables.at(t));
-            }
-        }
-    }
-    if (!gotActiveDb) {
-        activeDb = connectionNames.value(0);
-        setActive(tree->topLevelItem(0));
-    }
+      QString temp = connectionNames[i];
+      QTreeWidgetItem *root = new QTreeWidgetItem(tree);
+      QSqlDatabase db = QSqlDatabase::database(connectionNames.at(i), false);
+      root->setText(0, qDBCaption(db));
+      if (connectionNames.at(i) == activeDb) {
+         gotActiveDb = true;
+         setActive(root);
+      }
+      if (db.isOpen()) {
+         QStringList tables = db.tables();
+         for (int t = 0; t < tables.count(); ++t) {
+            QTreeWidgetItem *table = new QTreeWidgetItem(root);
+            table->setText(0, tables.at(t));
+         }
+      }
+   }
+   if (!gotActiveDb) {
+      activeDb = connectionNames.value(0);
+      setActive(tree->topLevelItem(0));
+   }
 
-    tree->doItemsLayout(); // HACK
+   tree->doItemsLayout();
 }
 
 QSqlDatabase ConnectionWidget::currentDatabase() const
@@ -149,17 +154,17 @@ void ConnectionWidget::on_tree_itemActivated(QTreeWidgetItem *item, int /* colum
     }
 }
 
-void ConnectionWidget::showMetaData()
-{
-    QTreeWidgetItem *cItem = tree->currentItem();
-    if (!cItem || !cItem->parent())
-        return;
-    setActive(cItem->parent());
-    emit metaDataRequested(cItem->text(0));
-}
+//void ConnectionWidget::showMetaData()
+//{
+//    QTreeWidgetItem *cItem = tree->currentItem();
+//    if (!cItem || !cItem->parent())
+//        return;
+//    setActive(cItem->parent());
+//    emit metaDataRequested(cItem->text(0));
+//}
 
-void ConnectionWidget::on_tree_currentItemChanged(QTreeWidgetItem *current, QTreeWidgetItem *)
-{
-    metaDataAction->setEnabled(current && current->parent());
-}
+//void ConnectionWidget::on_tree_currentItemChanged(QTreeWidgetItem *current, QTreeWidgetItem *)
+//{
+//    metaDataAction->setEnabled(current && current->parent());
+//}
 

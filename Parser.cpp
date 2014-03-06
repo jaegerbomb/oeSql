@@ -574,6 +574,16 @@ void Parser::buildSlotTable(QFile& file)
                   slotEnd = strings[i].indexOf(",", slotStart+1);
 
                   int slotId = strings[i].mid(slotStart+1, (slotEnd-slotStart) - 1).toInt();
+
+                  // BACKWARDS COMPATIBLE BUG FIX
+                  // SLS - this is a VERY specific fix for one file that had a bug... this will ensure backwards compatability
+                  // since the file was fixed.
+                  if (file.fileName().contains("StabilizingGimbal") && slotId == 4) {
+                     std::cout << "FIX" << std::endl;
+                     slotId = 1;
+                  }
+                  // BACKWARDS COMPATIBLE BUG FIX
+
                   // map this to the actual position in the table
                   if (slotId > 0 && idxPos != -1) {
                      int actSlotId = tIdxToSlotId[idxPos].value(slotId-1);

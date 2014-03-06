@@ -57,6 +57,7 @@ public:
     virtual ~ConnectionWidget();
 
     QSqlDatabase currentDatabase() const;
+    const QString currDatabaseName() const;
 
 signals:
     void tableActivated(const QString &table);
@@ -64,16 +65,18 @@ signals:
 
 public slots:
     void refresh();
-    void showMetaData();
+    //void showMetaData();
     void on_tree_itemActivated(QTreeWidgetItem *item, int column);
-    void on_tree_currentItemChanged(QTreeWidgetItem *current, QTreeWidgetItem *previous);
+    //void on_tree_currentItemChanged(QTreeWidgetItem *current, QTreeWidgetItem *previous);
 
 private:
     void setActive(QTreeWidgetItem *);
 
-    QTreeWidget *tree;
-    QAction *metaDataAction;
+    QTreeWidget* tree;
+    //QAction* metaDataAction;
     QString activeDb;
 };
+
+inline const QString ConnectionWidget::currDatabaseName() const      { return activeDb; }
 
 #endif

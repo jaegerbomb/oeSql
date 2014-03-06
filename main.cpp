@@ -44,32 +44,44 @@
 #include <QtCore>
 #include <QtWidgets>
 #include <QtSql>
+#include <iostream>
 
 
 int main(int argc, char *argv[])
 {
-    QApplication app(argc, argv);
+   QApplication app(argc, argv);
 
-    QMainWindow mainWin;
-    mainWin.setWindowTitle(QObject::tr("Qt SQL Browser"));
+   QMainWindow mainWin;
+   mainWin.setWindowTitle(QObject::tr("OpenEaagles Qt SQLite Parser and Browser"));
+   //mainWin.setAttribute(Qt::WA_DeleteOnClose, true);
+   Lee - setting this attribute crashes the browser, but we need it to close the views - make this work.
 
-    Browser browser(&mainWin);
-    mainWin.setCentralWidget(&browser);
+   // Add our menu to the main browser
+   Browser browser(&mainWin);
+   mainWin.setCentralWidget(&browser);
 
-    QMenu *fileMenu = mainWin.menuBar()->addMenu(QObject::tr("&File"));
-    fileMenu->addAction(QObject::tr("Add &Connection..."), &browser, SLOT(addConnection()));
-    fileMenu->addSeparator();
-    fileMenu->addAction(QObject::tr("&Quit"), &app, SLOT(quit()));
+   QMenu *fileMenu = mainWin.menuBar()->addMenu(QObject::tr("File"));
+   fileMenu->addAction(QObject::tr("Add Database..."), &browser, SLOT(createConnection()));
+   fileMenu->addAction(QObject::tr("Open Database..."), &browser, SLOT(openConnection()));
+   fileMenu->addAction(QObject::tr("Close Database..."), &browser, SLOT(closeConnection()));
+   fileMenu->addAction(QObject::tr("Close All &Dabases..."), &browser, SLOT(closeAllConnections()));
+   fileMenu->addSeparator();
+   fileMenu->addAction(QObject::tr("Quit"), &app, SLOT(quit()));
 
-    QMenu *helpMenu = mainWin.menuBar()->addMenu(QObject::tr("&Help"));
-    helpMenu->addAction(QObject::tr("About"), &browser, SLOT(about()));
-    helpMenu->addAction(QObject::tr("About Qt"), qApp, SLOT(aboutQt()));
+   QMenu *viewMenu = mainWin.menuBar()->addMenu(QObject::tr("View"));
+   viewMenu->addAction(QObject::tr("All Objects and &Slots"), &browser, SLOT(viewObjectsAndSlots()));
 
-    QObject::connect(&browser, SIGNAL(statusMessage(QString)),
-                     mainWin.statusBar(), SLOT(showMessage(QString)));
+   //Lee - deal with the WA_DeleteOnClose causing Widget to crash... find an elegant way to shut down the slot views as well.
 
-    mainWin.show();
-    QMetaObject::invokeMethod(&browser, "addConnection", Qt::QueuedConnection);
+   QMenu *helpMenu = mainWin.menuBar()->addMenu(QObject::tr("Help"));
+   helpMenu->addAction(QObject::tr("About"), &browser, SLOT(about()));
+   helpMenu->addAction(QObject::tr("About Qt"), qApp, SLOT(aboutQt()));
 
-    return app.exec();
+   QObject::connect(&browser, SIGNAL(statusMessage(QString)),
+                  mainWin.statusBar(), SLOT(showMessage(QString)));
+
+
+   mainWin.show();
+
+   return app.exec();
 }

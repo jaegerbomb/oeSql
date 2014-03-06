@@ -22,43 +22,17 @@ public:
 
     QSqlError addConnection(const QString &driver, const QString &dbName);
 
-    void insertRow();
-    void deleteRow();
-    void updateActions();
-
 public slots:
-    void exec();
     void showTable(const QString &table);
-    void showMetaData(const QString &table);
-    void addConnection();
-    void currentChanged() { updateActions(); }
+    void openConnection();
+    void createConnection();
+    void closeConnection();
+    void closeAllConnections();
     void about();
 
-    void on_insertRowAction_triggered()
-    { insertRow(); }
-    void on_deleteRowAction_triggered()
-    { deleteRow(); }
-    void on_fieldStrategyAction_triggered();
-    void on_rowStrategyAction_triggered();
-    void on_manualStrategyAction_triggered();
-    void on_submitAction_triggered();
-    void on_revertAction_triggered();
-    void on_selectAction_triggered();
     void on_connectionWidget_tableActivated(const QString &table)
     { showTable(table); }
-    void on_connectionWidget_metaDataRequested(const QString &table)
-    { showMetaData(table); }
-    void on_submitButton_clicked()
-    {
-        exec();
-        sqlEdit->setFocus();
-    }
-    void on_clearButton_clicked()
-    {
-        sqlEdit->clear();
-        sqlEdit->setFocus();
-    }
-    void on_viewButton_clicked();
+    void viewObjectsAndSlots();
 
 signals:
     void statusMessage(const QString &message);
@@ -69,7 +43,7 @@ protected:
 private:
     // our parser
     Parser myParser;
-    QTreeView* slotView;      // holds our slot view - if we have one
+    QList<QTreeView*> slotViews;      // holds our summary slot views for each table
 };
 
 class CustomModel: public QSqlRelationalTableModel
