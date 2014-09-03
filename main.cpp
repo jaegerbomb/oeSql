@@ -54,7 +54,7 @@ int main(int argc, char *argv[])
    QMainWindow mainWin;
    mainWin.setWindowTitle(QObject::tr("OpenEaagles Qt SQLite Parser and Browser"));
    //mainWin.setAttribute(Qt::WA_DeleteOnClose, true);
-   Lee - setting this attribute crashes the browser, but we need it to close the views - make this work.
+   //Lee - setting this attribute crashes the browser, but we need it to close the views - make this work.
 
    // Add our menu to the main browser
    Browser browser(&mainWin);
